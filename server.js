@@ -1,54 +1,33 @@
 'use strict';
 
-require('dotenv').config();
+//require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
-const passport = require('passport');
+//const passport = require('passport');
 
 mongoose.Promise = global.Promise;
 
-const { PORT, DATABASE_URL, TEST_DATABASE_URL } = require('./config');
-
+//const { PORT, DATABASE_URL, TEST_DATABASE_URL } = require('./config');
+const PORT = process.env.PORT || 3000;
 const app = express();
 
-const { router: newUserRouter } = require('./users');
-const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
-const {router: dreamEntryRouter } = require('./dreams');
-
 app.use(morgan('common'));
-
-app.use(express.static('public'));
-
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/views/index.html');
-});
-
-app.get('/signup', (req, res) => {
-  res.sendFile(__dirname + '/views/index.html');
-});
-
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
-  if (req.method === 'OPTIONS') {
-    return res.send(204);
-  }
-  next();
-});
-
-passport.use(localStrategy);
-passport.use(jwtStrategy);
-
-app.use('/account', newUserRouter);
-app.use('/login', authRouter);
-app.use('/dreams', dreamEntryRouter);
-
+//app.use(express.static('public'));
+app.get('/api/*', (req, res) => {
+   res.json({ok: true});
+ });
 app.use('*', (req, res) => {
-  return res.status(404).sendFile(__dirname + '/public/errorpage.html');
+  return res.status(404)/*.sendFile(__dirname + '/public/errorpage.html')*/;
 });
 
+
+
+
+ app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+
+ module.exports = {app};
+/*
 let server;
 
 function runServer(databaseUrl, port = PORT) {
@@ -88,5 +67,5 @@ if (require.main === module) {
   runServer(DATABASE_URL).catch(err => console.error(err));
 }
 
-module.exports = { app, runServer, closeServer, TEST_DATABASE_URL };
+module.exports = { app, runServer, closeServer, TEST_DATABASE_URL };*/
  
