@@ -11,6 +11,14 @@ mongoose.Promise = global.Promise;
 //const { PORT, DATABASE_URL, TEST_DATABASE_URL } = require('./config');
 const PORT = process.env.PORT || 3000;
 const app = express();
+const cors = require('cors');
+const {CLIENT_ORIGIN} = require('./config');
+
+app.use(
+    cors({
+        origin: CLIENT_ORIGIN
+    })
+);
 
 app.use(morgan('common'));
 //app.use(express.static('public'));

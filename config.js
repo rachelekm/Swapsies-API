@@ -1,0 +1,1 @@
+exports.CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || 'https://stormy-caverns-48800.herokuapp.com/';
