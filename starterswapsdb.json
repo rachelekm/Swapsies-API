@@ -1,0 +1,20 @@
+{ "_id" : ObjectId("5afe110a9b0bc932b85ba313"), 
+"user" : ObjectId("5aec70b6549bf2ddda442c87"), 
+"dsecription" : "2 chicken pot pies: has potatoes, carrots, and leeks", 
+"tags": [{"type": "american"}, {"type": "fast food"}],
+"interestedUsers" : [ObjectId("5aec70b6549bf2ddda442c88")], 
+"__v" : 0 }
+
+{ "_id" : ObjectId("5afe113e4c7c5232bc50fd62"), 
+"user" : ObjectId("5aec70b6549bf2ddda442c88"), 
+"dsecription" : "Rice & beans", 
+"tags": [{"type": "mexican"}, {"type": "healthy"}],
+"interestedUsers" : [ObjectId("5aec70b6549bf2ddda442c87")], 
+"__v" : 0 }
+
+{ "_id" : ObjectId("5afe39559234fd365fa15562"), 
+"user" : ObjectId("5aec70b6549bf2ddda442c88"), 
+"dsecription" : "3 avocado roll platters", 
+"tags": [{"type": "sushi"}, {"type": "healthy"}],
+"interestedUsers" : [], 
+"__v" : 0 }

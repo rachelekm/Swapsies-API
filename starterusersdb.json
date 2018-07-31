@@ -1,0 +1,19 @@
+{ "_id" : ObjectId("5aec70b6549bf2ddda442c87"), 
+"username" : "Demo_Account", 
+"password" : "$2a$10$ZeqcmD3.A2fmqnEblrTD0OhomzDBbBmITQEprUb89.ql9rmpqFNZS", 
+"firstName" : "Jane",
+"lastName" : "Doe",
+"affiliationName" : "Bob's Burgers",
+"affiliationAddress" : "123 Main St, San Fran, CA 12345",
+"affiliationContact" : "555-555-5555",
+"__v" : 0 }
+
+{ "_id" : ObjectId("5aec70b6549bf2ddda442c88"), 
+"username" : "Demo_Account2", 
+"password" : "$2a$10$ZeqcmD3.A2fmqnEblrTD0OhomzDBbBmITQEprUb89.ql9rmpqFNZS", 
+"firstName" : "John",
+"lastName" : "Doe",
+"affiliationName" : "Krusty Krab",
+"affiliationAddress" : "125 Main St, San Fran, CA 12345",
+"affiliationContact" : "555-555-5555",
+"__v" : 0 }
