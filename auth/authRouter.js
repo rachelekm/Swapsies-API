@@ -23,7 +23,7 @@ router.use(bodyParser.json());
 
 router.post('/', localAuth, (req, res) => {
   const authToken = createAuthToken(req.user.serialize());
-  res.json({authToken});
+  res.status(200).json({authToken});
 });
 
 const jwtAuth = passport.authenticate('jwt', {session: false});

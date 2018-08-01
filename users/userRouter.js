@@ -148,18 +148,6 @@ router.post('/', jsonParser, (req, res) => {
     });
 });
 
-router.get('/', jwtAuth, (req, res) => {
-  const userID = req.user.id;
-  User.findById(userID)
-  .then(function(user){
-    res.json(user.serialize())
-  })
-  .catch(err => {
-    console.log(err);
-        res.status(500).json({ message: 'Internal server error' });
-  });
-});
-
 router.get('/users', (req, res) => {
   return User.find()
     .then(users => res.json(users.map(user => user.serialize())))
