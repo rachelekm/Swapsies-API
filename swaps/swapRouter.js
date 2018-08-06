@@ -12,27 +12,17 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 
 const {swapEntry} = require('./models');
 
-let locQuery = (coords, distance) => {
-    return { loc: { $near: { $geometry: { type: "Point", coordinates: coords }, $maxDistance: parseInt(distance)}}}
-}
-
 router.post('/', jsonParser, jwtAuth, (req, res)=>{
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - 1);
   let user = req.body;
   console.log(user);
-  let limit = req.query.limit || 10;
-  let maxDistance = req.query.distance || 8;
-/*
-  maxDistance /= 6371;
 
-    // get coordinates [ <longitude> , <latitude> ]
   let coords = [];
-  coords[0] = req.query.longitude;
-  coords[1] = req.query.latitude;
+  coords[0] = user.latLong.lng;
+  coords[1] = user.latLong.lat;
 
-*/
-  return swapEntry.find(/*locQuery(coords, maxDistance)*/).then(swaps => {
+  return swapEntry.find({ start_coord: { $geoWithin: { $center: [ coords, 0.05 ] } } }).then(swaps => {
     console.log(swaps);
       return res.status(200).json(swaps.map(entry=>entry.serialize()));
     })
@@ -88,16 +78,17 @@ router.post('/add', jsonParser, jwtAuth, (req, res) => {
   return swapEntry.find({$and: [{submitDate: newSwap.submitDate}, {user: newUser}]})
   .count()
   .then(count => {
-    if (count > 0) {
+    /*if (count > 0) {
       return Promise.reject({
         code: 422,
         reason: 'ValidationError',
         message: 'A swap entry has already been submitted today'        
       });
-    }
+    }*/
     return swapEntry.create({
 
     user: newUser,
+    start_coord: [req.user.latLong.lng, req.user.latLong.lat],
     submitDate: newSwap.submitDate,
     description: newSwap.description,
     tags: newSwap.tags,

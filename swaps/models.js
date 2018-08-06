@@ -10,6 +10,10 @@ const swapSchema = mongoose.Schema({
     ref: 'User',
     required: true
   },
+  start_coord: {
+    type: [Number],   
+    index: '2d'
+  },
   submitDate: {
     type: Date,
     required: true,
