@@ -12,10 +12,28 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 
 const {swapEntry} = require('./models');
 
-router.get('/', jwtAuth, (req, res)=>{
-  const cutoffDate = new Date()
+let locQuery = (coords, distance) => {
+    return { loc: { $near: { $geometry: { type: "Point", coordinates: coords }, $maxDistance: parseInt(distance)}}}
+}
+
+router.post('/', jsonParser, jwtAuth, (req, res)=>{
+  const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - 1);
-  return swapEntry.find().then(swaps => {
+  let user = req.body;
+  console.log(user);
+  let limit = req.query.limit || 10;
+  let maxDistance = req.query.distance || 8;
+/*
+  maxDistance /= 6371;
+
+    // get coordinates [ <longitude> , <latitude> ]
+  let coords = [];
+  coords[0] = req.query.longitude;
+  coords[1] = req.query.latitude;
+
+*/
+  return swapEntry.find(/*locQuery(coords, maxDistance)*/).then(swaps => {
+    console.log(swaps);
       return res.status(200).json(swaps.map(entry=>entry.serialize()));
     })
     .catch(err => {
@@ -52,12 +70,12 @@ router.get('/:id', jsonParser, jwtAuth, (req, res)=>{
         res.status(500).json({ message: 'Internal server error' });
   });
 });
-
-router.post('/', jsonParser, jwtAuth, (req, res) => {
-  let newDream = req.body;
+*/ 
+router.post('/add', jsonParser, jwtAuth, (req, res) => {
+  let newSwap = req.body;
   let newUser;
-	const requiredFields = ['submitDate', 'keywords', 'mood', 'nightmare', 'lifeEvents', 'content'];
-  const missingField = requiredFields.find(field => !(field in newDream));
+	const requiredFields = ['submitDate', 'description', 'tags', 'interestedUsers', 'available'];
+  const missingField = requiredFields.find(field => !(field in newSwap));
   if (missingField) {
     	return res.status(422).json({
       	code: 422,
@@ -67,30 +85,29 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
     	});
   }
   newUser = req.user.id;
-  return dreamEntry.find({$and: [{submitDate: newDream.submitDate}, {user: newUser}]})
+  return swapEntry.find({$and: [{submitDate: newSwap.submitDate}, {user: newUser}]})
   .count()
   .then(count => {
     if (count > 0) {
       return Promise.reject({
         code: 422,
         reason: 'ValidationError',
-        message: 'A dream entry has already been submitted today'        
+        message: 'A swap entry has already been submitted today'        
       });
     }
-    return dreamEntry.create({
+    return swapEntry.create({
 
     user: newUser,
-    submitDate: newDream.submitDate,
-    keywords: newDream.keywords,
-    mood: newDream.mood,
-    nightmare: newDream.nightmare,
-    lifeEvents: newDream.lifeEvents,
-    content: newDream.content
+    submitDate: newSwap.submitDate,
+    description: newSwap.description,
+    tags: newSwap.tags,
+    interestedUsers: newSwap.interestedUsers,
+    available: newSwap.available
 
     });
   })
-    .then(dream => {
-      return res.status(201).json(dream.serialize());
+    .then(swap => {
+      return res.status(201).json(swap.serialize());
     })
     .catch((err) => {
       console.log(err);
@@ -100,7 +117,7 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
       res.status(500).json({code: 500, message: `Internal server error, ${err}`});
     });
 });
-
+/*
 router.put('/:id', jsonParser, jwtAuth, (req, res) => {
   const requiredFields = ['submitDate', 'keywords', 'mood', 'nightmare', 'lifeEvents', 'content'];
   const newObject= {};

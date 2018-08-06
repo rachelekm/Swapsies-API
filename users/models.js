@@ -30,6 +30,10 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  latLong: {
+  type: Object,
+  required: true     
+  },
   affiliationContact: {
     type: String,
     required: true
@@ -43,7 +47,8 @@ UserSchema.methods.serialize = function() {
   id: this.id || '',
   affiliationName: this.affiliationName || '',
   affiliationAddress: this.affiliationAddress || '',
-  affiliationContact: this.affiliationContact || ''
+  affiliationContact: this.affiliationContact || '',
+  latLong: this.latLong || ''
   };
 }
 

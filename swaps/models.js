@@ -9,11 +9,11 @@ const swapSchema = mongoose.Schema({
     type: Schema.ObjectId,
     ref: 'User',
     required: true
-  },/*
+  },
   submitDate: {
     type: Date,
     required: true,
-  },*/
+  },
   description: {
     type: String,
     required: true

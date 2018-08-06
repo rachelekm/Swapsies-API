@@ -16,9 +16,7 @@ const { router: swapsRouter } = require('./swaps');
 mongoose.Promise = global.Promise;
 
 app.use(
-    cors({
-        origin: CLIENT_ORIGIN
-    })
+    cors({credentials: true, origin: true})
 );
 
 app.use(morgan('common'));
@@ -29,6 +27,7 @@ passport.use(jwtStrategy);
 
 app.use('/api/users/', usersRouter);
 app.use('/api/auth/', authRouter);
+app.use('/api/swaps/', swapsRouter);
 
 const jwtAuth = passport.authenticate('jwt', { session: false });
 

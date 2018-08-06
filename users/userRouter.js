@@ -12,7 +12,7 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 const {User} = require('./models');
 
 router.post('/', jsonParser, (req, res) => {
-	const requiredFields = ['username', 'password', 'firstName', 'lastName', 'affiliationName', 'affiliationAddress', 'affiliationContact'];
+	const requiredFields = ['username', 'password', 'firstName', 'lastName', 'affiliationName', 'affiliationAddress', 'affiliationContact', 'latLong'];
   const missingField = requiredFields.find(field => !(field in req.body));
 
   if (missingField) {
@@ -103,7 +103,7 @@ router.post('/', jsonParser, (req, res) => {
     	});
   	}
 
-  let {username, password, firstName, lastName, affiliationName, affiliationAddress, affiliationContact} = req.body;
+  let {username, password, firstName, lastName, affiliationName, affiliationAddress, affiliationContact, latLong} = req.body;
   firstName = firstName.trim();
   lastName = lastName.trim();
   affiliationName = affiliationName.trim();
@@ -130,6 +130,7 @@ router.post('/', jsonParser, (req, res) => {
         lastName,
         affiliationName,
         affiliationAddress,
+        latLong,
         affiliationContact,
         password: hash,
         accountCreated: new Date()
