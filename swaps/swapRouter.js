@@ -51,16 +51,19 @@ router.get('/userSwaps', jwtAuth, (req, res)=>{
     });
 });
 
-
-router.get('/:id', jsonParser, jwtAuth, (req, res)=>{
-  return dreamEntry.findById(req.params.id)
-  .then((entry) => res.json(entry.serialize()))
+*/ 
+router.get('/', jsonParser, jwtAuth, (req, res)=>{
+  return swapEntry.find()
+  .then((swap) => {
+    return res.status(200).json(swap.map(entry=>entry.serialize()));
+  })
   .catch(err => {
     console.log(err);
         res.status(500).json({ message: 'Internal server error' });
   });
 });
-*/ 
+
+
 router.post('/add', jsonParser, jwtAuth, (req, res) => {
   let newSwap = req.body;
   let newUser;
@@ -88,6 +91,7 @@ router.post('/add', jsonParser, jwtAuth, (req, res) => {
     return swapEntry.create({
 
     user: newUser,
+    restaurantTitle: newUser.affiliationName,
     start_coord: [req.user.latLong.lng, req.user.latLong.lat],
     submitDate: newSwap.submitDate,
     description: newSwap.description,
@@ -108,22 +112,22 @@ router.post('/add', jsonParser, jwtAuth, (req, res) => {
       res.status(500).json({code: 500, message: `Internal server error, ${err}`});
     });
 });
-/*
+
 router.put('/:id', jsonParser, jwtAuth, (req, res) => {
-  const requiredFields = ['submitDate', 'keywords', 'mood', 'nightmare', 'lifeEvents', 'content'];
+  const requiredFields = ['submitDate', 'description', 'tags', 'interestedUsers', 'available'];
   const newObject= {};
   requiredFields.forEach(field => {
     if(field in req.body){
       newObject[field] = req.body[field];
     }
   });
-
-  if(req.body.id !== req.params.id){
-        const message = `Request path id (${req.params.id}) and request body id (${req.body.id}) must match`;
+  console.log(req.body);
+  if(req.body._id !== req.params.id){
+        const message = `Request path id (${req.params.id}) and request body id (${req.body._id}) must match`;
         console.error(message);
         return res.status(400).send(message);
   }
-  dreamEntry.findByIdAndUpdate(req.params.id,
+  swapEntry.findByIdAndUpdate(req.params.id,
     {$set: newObject})
   .then(function(entry){
     res.status(204).end()})
@@ -134,7 +138,7 @@ router.put('/:id', jsonParser, jwtAuth, (req, res) => {
 });
 
 router.delete('/:id', jsonParser, jwtAuth, (req, res) => {
-  dreamEntry.findByIdAndRemove(req.params.id)
+  swapEntry.findByIdAndRemove(req.params.id)
   .then(dream => {
   console.log(`Deleted dream entry ID: ${req.params.id}`);
   res.status(204).end();
@@ -144,6 +148,7 @@ router.delete('/:id', jsonParser, jwtAuth, (req, res) => {
     res.status(500).json({message: 'Internal server error'})
   });
 });
+/*
 
 router.post('/dream-log', jsonParser, jwtAuth, (req, res) => {
   let query = req.body.search.toString();
